@@ -55,12 +55,12 @@ class device_handler(debounce_handler):
     rf.enableTransmit(0)
     rf.setPulseLength(150) #194 189
 
-    def act(self, client_address, state):
-        print "State", state, "from client @", client_address
+    def act(self, client_address, state, name):
+        print "State", state, "on ", name, "from client @", client_address
         if state:
-            self.rf.sendDecimal(self.CODES[client_address]["ON"], 24)
+            self.rf.sendDecimal(self.CODES[name]["ON"], 24)
         else:
-            self.rf.sendDecimal(self.CODES[client_address]["OFF"], 24)
+            self.rf.sendDecimal(self.CODES[name]["OFF"], 24)
         return True
 
 if __name__ == "__main__":
