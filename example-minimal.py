@@ -15,6 +15,7 @@
 import fauxmo
 import logging
 import time
+import pi_switch
 
 from debounce_handler import debounce_handler
 
@@ -24,10 +25,42 @@ class device_handler(debounce_handler):
     """Publishes the on/off state requested,
        and the IP address of the Echo making the request.
     """
-    TRIGGERS = {"device": 52000}
+    device1 = "device one"
+    
+    TRIGGERS = {
+ 	device1: 52001, 
+	"device two": 52002, 
+	"device three": 52003, 
+	"device four":52004, 
+	"device five": 52005, 
+	"device six": 52006,
+	"device seven": 52007,
+	"device eight": 52008,
+	"device nine": 52009,
+	"device ten": 52010
+    }
+    CODES = {
+        device1: {"ON": 70963, "OFF": 70972},
+        "device two": {"ON": 71107, "OFF": 71116},
+        "device three": {"ON": 71427, "OFF": 71436},
+        "device four": {"ON": 72963, "OFF": 72972},
+        "device five": {"ON": 79107, "OFF": 79116},
+        "device six": {"ON": 1054003, "OFF": 1054012},
+        "device seven": {"ON": 1054147, "OFF": 1054156},
+        "device eight": {"ON": 1054467, "OFF": 1054476},
+        "device nine": {"ON": 1056003, "OFF": 1056012},
+        "device ten": {"ON": 1062147, "OFF": 1062156}
+    }
+    rf = pi_switch.RCSwitchSender()
+    rf.enableTransmit(0)
+    rf.setPulseLength(150) #194 189
 
     def act(self, client_address, state):
         print "State", state, "from client @", client_address
+        if state:
+            self.rf.sendDecimal(self.CODES[client_address]["ON"], 24)
+        else:
+            self.rf.sendDecimal(self.CODES[client_address]["OFF"], 24)
         return True
 
 if __name__ == "__main__":
